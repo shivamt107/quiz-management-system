@@ -22,6 +22,8 @@ export const useAuth = () => {
     setUsername('');
     localStorage.removeItem('userRole');
     localStorage.removeItem('username');
+    // Clear all quiz-related session storage on logout
+    sessionStorage.clear();
   }, []);
 
   return { currentUser, username, login, logout };

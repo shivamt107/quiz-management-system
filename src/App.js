@@ -3,10 +3,13 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { useQuizData } from './hooks/useQuizData';
 import Login from './components/Login';
+import UserProfileDropdown from './components/UserProfileDropdown';
 import './App.css';
 
 const QuizList = lazy(() => import('./components/QuizList'));
 const CreateEditQuiz = lazy(() => import('./pages/CreateEditQuiz'));
+const TakeQuiz = lazy(() => import('./pages/TakeQuiz'));
+const QuizResults = lazy(() => import('./pages/QuizResults'));
 
 function App() {
   const { currentUser, username, login, logout } = useAuth();
@@ -19,18 +22,17 @@ function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow-sm border-b border-gray-200">
+        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div>
               <h1 className="text-xl font-bold text-gray-900">Quiz Management System</h1>
-              <p className="text-sm text-gray-600">Welcome, {username} ({currentUser})</p>
+              <p className="text-sm text-gray-600">{username}</p>
             </div>
-            <button
-              onClick={logout}
-              className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
-            >
-              Logout
-            </button>
+            <UserProfileDropdown
+              username={username}
+              userRole={currentUser}
+              onLogout={logout}
+            />
           </div>
         </header>
         <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-lg text-gray-600">Loading...</div>}>
@@ -38,6 +40,8 @@ function App() {
             <Route path="/" element={<QuizList userRole={currentUser} />} />
             <Route path="/create" element={<CreateEditQuiz quizzes={quizzes} onSave={saveQuiz} />} />
             <Route path="/edit/:id" element={<CreateEditQuiz quizzes={quizzes} onSave={saveQuiz} />} />
+            <Route path="/quiz/:id" element={<TakeQuiz quizzes={quizzes} />} />
+            <Route path="/quiz/:id/results" element={<QuizResults />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

@@ -28,6 +28,14 @@ const QuizCard = memo(({ quiz, onDelete, canDelete, canEdit, canStart }) => {
     navigate(`/edit/${quiz.id}`);
   };
 
+  const handleStartQuiz = () => {
+    // Clear any existing session for this quiz before starting fresh
+    const currentUsername = localStorage.getItem('username');
+    const quizSessionKey = `quiz_${quiz.id}_${currentUsername}`;
+    sessionStorage.removeItem(quizSessionKey);
+    navigate(`/quiz/${quiz.id}`);
+  };
+
   const difficultyColors = {
     Easy: 'bg-green-100 text-green-800',
     Medium: 'bg-yellow-100 text-yellow-800',
@@ -61,7 +69,7 @@ const QuizCard = memo(({ quiz, onDelete, canDelete, canEdit, canStart }) => {
 
       <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
         {canStart && (
-        <button className="w-full px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+        <button onClick={handleStartQuiz} className="w-full px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
           Start Quiz
         </button>
         )}
