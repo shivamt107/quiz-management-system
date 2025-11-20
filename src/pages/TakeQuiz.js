@@ -17,15 +17,12 @@ const TakeQuiz = memo(({ quizzes }) => {
   // Reset quiz state when component mounts or quiz changes
   useEffect(() => {
     if (quiz) {
-      // Always start fresh - session storage is only for auto-save during quiz
-      // Session is cleared when clicking "Start Quiz" button
       setCurrentQuestionIndex(0);
       setAnswers({});
       setTimeRemaining(quiz.duration * 60);
     }
   }, [quiz, id, quizSessionKey]);
 
-  // Save quiz progress to sessionStorage whenever state changes
   useEffect(() => {
     if (quiz && timeRemaining > 0) {
       const session = {
